@@ -61,7 +61,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def token(self):
         """
         Позволяет получить токен пользователя путем вызова user.token, вместо
-        user._generate_jwt_token(). 
+        user._generate_jwt_token().
         """
         return self._generate_jwt_token()
 
@@ -86,7 +86,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         token = jwt.encode({
             'id': self.pk,
-            'exp': int(dt.strftime('%s'))
+            'exp': int(dt.strftime('%S'))
         }, settings.SECRET_KEY, algorithm='HS256')
 
         return token.decode('utf-8')
