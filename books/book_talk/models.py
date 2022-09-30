@@ -1,4 +1,5 @@
 from django.db import models
+from book_auth.models import User
 
 
 class Author(models.Model):
@@ -11,3 +12,18 @@ class Author(models.Model):
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
+
+
+class Book(models.Model):
+    title = models.CharField(max_length=60, verbose_name='Название')
+    annotation = models.TextField(verbose_name='Аннотация')
+    author = models.ManyToManyField(Author, verbose_name='Автор книги', related_name='books')
+    creator_id = models.OneToOneField(User, on_delete = models.CASCADE, primary_key = True, verbose_name='Пользователь')
+    archived = models.BooleanField(default=False, verbose_name='Отправлено в архив')
+
+    class Meta:
+        verbose_name = 'Книга'
+        verbose_name_plural = 'Книги'
+
+    def __str__(self):
+        return self.title
