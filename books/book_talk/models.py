@@ -33,8 +33,8 @@ class Comment(models.Model):
     create_time = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     update_time = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
     text = models.TextField(verbose_name='Текст комментария')
-    author = models.ForeignKey(Author, on_delete=models.CASCADE, verbose_name='Автор комментария',
-                               related_name='comments')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор комментария',
+                             related_name='comments')
     book = models.ForeignKey(Book, on_delete=models.CASCADE, verbose_name='Книга', related_name='comments')
 
     class Meta:
