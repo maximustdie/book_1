@@ -71,7 +71,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
         Попытка аутентификации с предоставленными данными. Если успешно -
         вернуть пользователя и токен, иначе - сгенерировать исключение.
         """
-
+        # убрана конструкция try/except
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
 
 
