@@ -18,7 +18,7 @@ class Book(models.Model):
     title = models.CharField(max_length=60, verbose_name='Название')
     annotation = models.TextField(verbose_name='Аннотация')
     author = models.ManyToManyField(Author, verbose_name='Автор книги', related_name='books')
-    creator_id = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, verbose_name='Пользователь')
+    creator_id = models.ForeignKey(User, on_delete=models.CASCADE, primary_key=True, verbose_name='Пользователь')
     archived = models.BooleanField(default=False, verbose_name='Отправлено в архив')
 
     class Meta:
