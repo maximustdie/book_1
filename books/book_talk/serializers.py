@@ -5,7 +5,7 @@ from rest_framework import serializers
 class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Author
-        fields = ['id', 'first_name', 'last_name', 'owner']
+        fields = ['id', 'first_name', 'last_name', 'second_name', 'birth_date', 'death_date', 'owner']
 
 
 class BookSerializer(serializers.ModelSerializer):
