@@ -5,13 +5,13 @@ from rest_framework import serializers
 class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Author
-        fields = ['first_name', 'last_name']
+        fields = ['first_name', 'last_name', 'owner']
 
 
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
-        fields = ['title', 'annotation', 'author', 'creator_id', 'archived']
+        fields = ['title', 'annotation', 'author', 'owner', 'archived']
 
 
 class CommentSerializer(serializers.ModelSerializer):

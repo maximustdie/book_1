@@ -5,6 +5,7 @@ from book_auth.models import User
 class Author(models.Model):
     first_name = models.CharField(max_length=30, verbose_name='Имя')
     last_name = models.CharField(max_length=30, verbose_name='Фамилия')
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
 
     class Meta:
         verbose_name = 'Автор'
@@ -18,7 +19,7 @@ class Book(models.Model):
     title = models.CharField(max_length=60, verbose_name='Название')
     annotation = models.TextField(verbose_name='Аннотация')
     author = models.ManyToManyField(Author, verbose_name='Автор книги', related_name='books')
-    creator_id = models.ForeignKey(User, on_delete=models.CASCADE, primary_key=True, verbose_name='Пользователь')
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
     archived = models.BooleanField(default=False, verbose_name='Отправлено в архив')
 
     class Meta:
@@ -33,7 +34,7 @@ class Comment(models.Model):
     create_time = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     update_time = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
     text = models.TextField(verbose_name='Текст комментария')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор комментария',
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор комментария',
                              related_name='comments')
     book = models.ForeignKey(Book, on_delete=models.CASCADE, verbose_name='Книга', related_name='comments')
 
