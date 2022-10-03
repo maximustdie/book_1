@@ -23,6 +23,7 @@ class AuthorList(APIView):
 
     def post(self, request, format=None):
         serializer = AuthorSerializer(data=request.data)
+        serializer.initial_data['owner'] = self.request.user.id
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -76,7 +77,9 @@ class BookList(APIView):
 
     def post(self, request, format=None):
         serializer = BookSerializer(data=request.data)
+        serializer.initial_data['owner'] = self.request.user.id
         if serializer.is_valid():
+
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -114,4 +117,4 @@ class BookDetail(APIView):
         book.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    
+
