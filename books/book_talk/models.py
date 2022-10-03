@@ -1,11 +1,16 @@
 from django.db import models
+from django.utils.datetime_safe import date
+
 from book_auth.models import User
 
 
 class Author(models.Model):
     first_name = models.CharField(max_length=30, verbose_name='Имя')
     last_name = models.CharField(max_length=30, verbose_name='Фамилия')
+    second_name = models.CharField(max_length=30, verbose_name='Отчество', blank=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
+    birth_date = models.DateField(verbose_name='Дата рождения', default=date.today)
+    death_date = models.DateField(verbose_name='Дата смерти', default=date.today)
 
     class Meta:
         verbose_name = 'Автор'
