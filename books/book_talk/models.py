@@ -9,8 +9,8 @@ class Author(models.Model):
     last_name = models.CharField(max_length=30, verbose_name='Фамилия')
     second_name = models.CharField(max_length=30, verbose_name='Отчество', blank=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
-    birth_date = models.DateField(verbose_name='Дата рождения', default=date.today)
-    death_date = models.DateField(verbose_name='Дата смерти', default=date.today)
+    birth_date = models.DateField(verbose_name='Дата рождения', blank=True)
+    death_date = models.DateField(verbose_name='Дата смерти', blank=True)
 
     class Meta:
         verbose_name = 'Автор'

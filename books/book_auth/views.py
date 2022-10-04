@@ -1,3 +1,4 @@
+from django.utils.decorators import method_decorator
 from rest_framework import status
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -5,16 +6,19 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .renderers import UserJSONRenderer
 from .serializers import RegistrationSerializer, LoginSerializer, UserSerializer
+from drf_yasg.utils import swagger_auto_schema
 
 
 class RegistrationAPIView(APIView):
-    """
-    Регистрация пользователей
-    """
     permission_classes = (AllowAny,)
     serializer_class = RegistrationSerializer
     renderer_classes = (UserJSONRenderer,)
 
+    @swagger_auto_schema(
+        name='post',
+        request_body=RegistrationSerializer,
+        operation_description="Регистрация пользователей"
+    )
     def post(self, request):
         user = request.data.get('user', {})
         serializer = self.serializer_class(data=user)
@@ -29,6 +33,11 @@ class LoginAPIView(APIView):
     serializer_class = LoginSerializer
     renderer_classes = (UserJSONRenderer,)
 
+    @swagger_auto_schema(
+        name='post',
+        request_body=LoginSerializer,
+        operation_description="Вход в систему"
+    )
     def post(self, request):
         user = request.data.get('user', {})
 
@@ -38,6 +47,18 @@ class LoginAPIView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+@method_decorator(
+    name='get',
+    decorator=swagger_auto_schema(operation_description="Получить информацию о пользователе"
+                                  ))
+@method_decorator(
+    name='put',
+    decorator=swagger_auto_schema(operation_description="Обновить информацию о пользователе"
+                                  ))
+@method_decorator(
+    name='patch',
+    decorator=swagger_auto_schema(operation_description="Обновить информацию о пользователе"
+                                  ))
 class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
     permission_classes = (IsAuthenticated,)
     renderer_classes = (UserJSONRenderer,)
