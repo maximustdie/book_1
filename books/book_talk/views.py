@@ -72,6 +72,7 @@ class BookDetail(generics.RetrieveUpdateDestroyAPIView):
     filter_backends = [DjangoFilterBackend]
 
 
+# Комментарии
 class CommentList(APIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
@@ -132,7 +133,8 @@ class CommentUpdate(APIView):
 
 @method_decorator(
     name='delete',
-    decorator=swagger_auto_schema(operation_description="Удалить комментарий"
+    decorator=swagger_auto_schema(operation_description="Удалить комментарий",
+                                  responses={204: CommentSerializer},
                                   ))
 class CommentDestroy(generics.DestroyAPIView):
     queryset = Comment.objects.all()
