@@ -5,7 +5,7 @@ from .serializers import AuthorSerializer, BookSerializer, CommentSerializer
 from book_talk.models import Author, Book, Comment
 from rest_framework import generics, status
 from rest_framework import permissions
-from .permissions import IsOwnerOrReadOnly
+from .permissions import IsOwnerOrReadOnly, IsOwnerCommentOrOwnerBook
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -128,3 +128,10 @@ class CommentUpdate(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CommentDestroy(generics.DestroyAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = (IsOwnerCommentOrOwnerBook,)
+
