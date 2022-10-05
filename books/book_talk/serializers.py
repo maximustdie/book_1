@@ -17,4 +17,4 @@ class BookSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ['id', 'create_time', 'update_time', 'text' ]
+        fields = ['id', 'create_time', 'update_time', 'text', 'book', 'owner']
