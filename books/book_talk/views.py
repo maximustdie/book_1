@@ -130,8 +130,11 @@ class CommentUpdate(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@method_decorator(
+    name='delete',
+    decorator=swagger_auto_schema(operation_description="Удалить комментарий"
+                                  ))
 class CommentDestroy(generics.DestroyAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = (IsOwnerCommentOrOwnerBook,)
-
