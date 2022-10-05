@@ -113,6 +113,11 @@ class CommentUpdate(APIView):
         except Comment.DoesNotExist:
             raise Http404
 
+    @swagger_auto_schema(
+        name='put',
+        request_body=CommentSerializer,
+        operation_description="Изменить комментарий к книге"
+    )
     def put(self, request, pk, format=None):
         comment = self.get_object(pk)
         serializer = CommentSerializer(comment, data=request.data)
