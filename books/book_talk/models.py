@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.datetime_safe import date
 
 from book_auth.models import User
+from book_files.models import File
 
 
 class Author(models.Model):
@@ -24,8 +25,10 @@ class Book(models.Model):
     title = models.CharField(max_length=60, verbose_name='Название')
     annotation = models.TextField(verbose_name='Аннотация')
     author = models.ManyToManyField(Author, verbose_name='Автор книги', related_name='books')
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь', related_name='books')
     archived = models.BooleanField(default=False, verbose_name='Отправлено в архив')
+    file = models.ForeignKey(File, on_delete=models.CASCADE, verbose_name='Файл', related_name='books', null=True,
+                             blank=True)
 
     class Meta:
         verbose_name = 'Книга'
@@ -40,7 +43,7 @@ class Comment(models.Model):
     update_time = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
     text = models.TextField(verbose_name='Текст комментария')
     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор комментария',
-                             related_name='comments')
+                              related_name='comments')
     book = models.ForeignKey(Book, on_delete=models.CASCADE, verbose_name='Книга', related_name='comments')
 
     class Meta:
