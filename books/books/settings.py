@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'book_auth.apps.BookAuthConfig',
     'book_talk.apps.BookTalkConfig',
+    'book_files.apps.BookTalkConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
