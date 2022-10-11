@@ -1,8 +1,8 @@
 from django.urls import path
 
-from book_files.views import FileView
+from book_files.views import FileList
 
 app_name = 'book_files'
 urlpatterns = [
-    path('upload/', FileView.as_view())
+    path('books/', FileList.as_view())
 ]

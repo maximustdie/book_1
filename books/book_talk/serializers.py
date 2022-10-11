@@ -11,7 +11,7 @@ class AuthorSerializer(serializers.ModelSerializer):
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
-        fields = ['id', 'title', 'annotation', 'author', 'owner', 'archived']
+        fields = ['id', 'title', 'annotation', 'author', 'owner', 'archived', 'file']
 
 
 class CommentSerializer(serializers.ModelSerializer):

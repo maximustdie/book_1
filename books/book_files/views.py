@@ -3,10 +3,12 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import FileSerializer
+from rest_framework.permissions import IsAuthenticated
 
 
-class FileView(APIView):
+class FileList(APIView):
     parser_classes = (MultiPartParser, FormParser)
+    permission_classes = (IsAuthenticated, )
 
     def post(self, request, *args, **kwargs):
         serializer = FileSerializer(data=request.data)
