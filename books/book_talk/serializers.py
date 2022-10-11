@@ -1,5 +1,6 @@
 from .models import Author, Book, Comment
 from rest_framework import serializers
+from book_files.serializers import FileSerializer
 
 
 class AuthorSerializer(serializers.ModelSerializer):
@@ -9,6 +10,7 @@ class AuthorSerializer(serializers.ModelSerializer):
 
 
 class BookSerializer(serializers.ModelSerializer):
+    file = FileSerializer()
     class Meta:
         model = Book
         fields = ['id', 'title', 'annotation', 'author', 'owner', 'archived', 'file']

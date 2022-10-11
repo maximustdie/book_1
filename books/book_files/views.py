@@ -4,11 +4,17 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import FileSerializer
 from rest_framework.permissions import IsAuthenticated
+from .models import File
 
 
 class FileList(APIView):
     parser_classes = (MultiPartParser, FormParser)
     permission_classes = (IsAuthenticated, )
+
+    def get(self, request,):
+        files = File.objects.all()
+        serializer = FileSerializer(files, many=True)
+        return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
         serializer = FileSerializer(data=request.data)
