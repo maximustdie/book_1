@@ -45,10 +45,12 @@ class Comment(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор комментария',
                               related_name='comments')
     book = models.ForeignKey(Book, on_delete=models.CASCADE, verbose_name='Книга', related_name='comments')
+    parent = models.ForeignKey("Comment", on_delete=models.CASCADE, verbose_name='Ответил', related_name='daughter',
+                               default=None, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
 
     def __str__(self):
-        return f'Дата создания: {self.create_time}, Автор комментария:{self.author} Книга:{self.book}'
+        return f'id:{self.id} Дата создания: {self.create_time} // Пользователь:{self.owner} // Книга:{self.book}'

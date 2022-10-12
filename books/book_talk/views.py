@@ -103,6 +103,22 @@ class CommentList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class AnswerCreate(APIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request, pk, parent_id, format=None):
+        serializer = CommentSerializer(data=request.data)
+        serializer.initial_data['owner'] = self.request.user.id
+        serializer.initial_data['book'] = pk
+        serializer.initial_data['parent'] = parent_id
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class CommentUpdate(APIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer

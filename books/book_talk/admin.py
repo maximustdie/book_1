@@ -22,6 +22,10 @@ class BookAdmin(admin.ModelAdmin):
         return ", ".join([f'{a.first_name} {a.last_name}' for a in obj.author.all()])
 
 
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('id', 'owner', 'book', 'create_time', 'update_time', 'parent')
+
+
 admin.site.register(Author, AuthorAdmin)
 admin.site.register(Book, BookAdmin)
-admin.site.register(Comment)
+admin.site.register(Comment, CommentAdmin)
