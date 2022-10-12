@@ -22,7 +22,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ['id', 'create_time', 'update_time', 'text', 'book', 'owner', 'daughter_comment']
+        fields = ['id', 'create_time', 'update_time', 'text', 'book', 'owner', 'daughter_comment', 'parent']
 
     def get_daughter_comment(self, obj):
         queryset = Comment.objects.filter(parent_id=obj.id)
