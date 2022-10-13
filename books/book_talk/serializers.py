@@ -10,11 +10,16 @@ class AuthorSerializer(serializers.ModelSerializer):
 
 
 class BookSerializer(serializers.ModelSerializer):
-    file = FileSerializer()
+    file_data = serializers.SerializerMethodField()
 
     class Meta:
         model = Book
-        fields = ['id', 'title', 'annotation', 'author', 'owner', 'archived', 'file']
+        fields = ['id', 'title', 'annotation', 'author', 'owner', 'archived', 'file', 'file_data']
+
+    def get_file_data(self, obj):
+        if obj.file:
+            return FileSerializer(obj.file).data
+        return None
 
 
 class CommentSerializer(serializers.ModelSerializer):

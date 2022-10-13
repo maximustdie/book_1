@@ -1,9 +1,11 @@
+from collections import OrderedDict
+
 from django.http import Http404
 from django.utils.decorators import method_decorator
 from django_filters.rest_framework import DjangoFilterBackend
 from .serializers import AuthorSerializer, BookSerializer, CommentSerializer
 from book_talk.models import Author, Book, Comment
-from rest_framework import generics, status
+from rest_framework import generics, status, viewsets
 from rest_framework import permissions
 from .permissions import IsOwnerOrReadOnly, IsOwnerCommentOrOwnerBook
 from drf_yasg.utils import swagger_auto_schema
@@ -44,7 +46,6 @@ class BookList(generics.ListCreateAPIView):
         serializer = BookSerializer(data=request.data)
         serializer.initial_data['owner'] = self.request.user.id
         if serializer.is_valid():
-            serializer.save()
             return super(BookList, self).create(request, *args, **kwargs)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -119,40 +120,35 @@ class AnswerCreate(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class CommentUpdate(APIView):
+class CommentDetailViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = (IsOwnerOrReadOnly,)
 
-    def get_object(self, pk):
-        try:
-            return Comment.objects.get(pk=pk)
-        except Comment.DoesNotExist:
-            raise Http404
+    def get_permissions(self):
 
-    @swagger_auto_schema(
-        name='put',
-        request_body=CommentSerializer,
-        operation_description="Изменить комментарий к книге"
-    )
-    def put(self, request, pk, format=None):
-        comment = self.get_object(pk)
-        serializer = CommentSerializer(comment, data=request.data)
-        print(comment.owner)
-        serializer.initial_data['owner'] = comment.owner.id
-        serializer.initial_data['book'] = comment.book.id
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if self.action == 'destroy':
+            permission_classes = [IsOwnerCommentOrOwnerBook]
+        else:
+            permission_classes = [IsOwnerOrReadOnly]
+        return [permission() for permission in permission_classes]
 
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
 
-@method_decorator(
-    name='delete',
-    decorator=swagger_auto_schema(operation_description="Удалить комментарий",
-                                  responses={204: CommentSerializer},
-                                  ))
-class CommentDestroy(generics.DestroyAPIView):
-    queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
-    permission_classes = (IsOwnerCommentOrOwnerBook,)
+        # делает поля 'book', 'owner', 'parent' неизменяемыми
+        data = OrderedDict()
+
+        data.update(request.data)
+        data['book'] = instance.book.id
+        data['owner'] = instance.owner.id
+        data['parent'] = instance.parent.id if instance.parent else None
+
+        serializer = self.get_serializer(instance, data=data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            instance._prefetched_objects_cache = {}
+
+        return Response(serializer.data)
