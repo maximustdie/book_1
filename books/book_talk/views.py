@@ -77,10 +77,11 @@ class BookDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsOwnerOrReadOnly,)
     filter_backends = [DjangoFilterBackend]
     
-
     def delete(self, request, *args, **kwargs):
-        
-        return self.destroy(request, *args, **kwargs)
+        book = Book.objects.get(pk=kwargs['pk'])
+        book.deleted = True
+        book.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 # Комментарии
 class CommentList(APIView):
