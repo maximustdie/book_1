@@ -10,8 +10,8 @@ class Author(models.Model):
     last_name = models.CharField(max_length=30, verbose_name='Фамилия')
     second_name = models.CharField(max_length=30, verbose_name='Отчество', blank=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
-    birth_date = models.DateField(verbose_name='Дата рождения', blank=True)
-    death_date = models.DateField(verbose_name='Дата смерти', blank=True)
+    birth_date = models.DateField(verbose_name='Дата рождения', blank=True, null=True)
+    death_date = models.DateField(verbose_name='Дата смерти', blank=True, null=True)
 
     class Meta:
         verbose_name = 'Автор'
@@ -29,6 +29,7 @@ class Book(models.Model):
     archived = models.BooleanField(default=False, verbose_name='Отправлено в архив')
     file = models.ForeignKey(File, on_delete=models.CASCADE, verbose_name='Файл', related_name='books', null=True,
                              blank=True)
+    deleted = models.BooleanField(default=False, verbose_name='Отправленно в корзину')
 
     class Meta:
         verbose_name = 'Книга'

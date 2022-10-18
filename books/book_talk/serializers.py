@@ -14,7 +14,7 @@ class BookSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Book
-        fields = ['id', 'title', 'annotation', 'author', 'owner', 'archived', 'file', 'file_data']
+        fields = ['id', 'title', 'annotation', 'author', 'owner', 'archived', 'file', 'file_data', 'deleted']
 
     def get_file_data(self, obj):
         if obj.file:
