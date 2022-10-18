@@ -49,6 +49,11 @@ class BookList(generics.ListCreateAPIView):
             return super(BookList, self).create(request, *args, **kwargs)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def get(self, request, *args, **kwargs):
+        books_not_deleted = Book.objects.filter(deleted=False)
+        serializer = BookSerializer(books_not_deleted, many=True)
+        return Response(serializer.data)
+
 
 @method_decorator(
     name='get',
@@ -71,7 +76,11 @@ class BookDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = BookSerializer
     permission_classes = (IsOwnerOrReadOnly,)
     filter_backends = [DjangoFilterBackend]
+    
 
+    def delete(self, request, *args, **kwargs):
+        
+        return self.destroy(request, *args, **kwargs)
 
 # Комментарии
 class CommentList(APIView):
