@@ -4,6 +4,7 @@ https://docs.celeryq.dev/en/stable/django/first-steps-with-django.html
 import os
 
 from celery import Celery
+from celery.schedules import crontab
 
 from django.conf import settings
 
@@ -18,9 +19,16 @@ app = Celery("books")
 # config keys has `CELERY` prefix
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
-# discover and load tasks.py from from all registered Django apps
-app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 
+app.conf.beat_schedule = {
+    'delete-books-every-twelve-hourse': {
+        'task': 'book_talk.tasks.delete_books_from_the_trash',
+        'schedule': crontab(minute=0, hour='*/12'),
+    },
+}
+
+# discover and load tasks.py from from all registered Django apps
+app.autodiscover_tasks()
 
 @app.task
 def divide(x, y):
